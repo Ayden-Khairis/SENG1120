@@ -1,0 +1,63 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+#include "node.h"
+
+// Node 
+template <class data_type>
+Node<data_type>::Node(const data_type& initial_data, Node<data_type>* initial_next, Node<data_type>* initial_previous)
+{
+	next = initial_next;
+	previous = initial_previous;
+	data = initial_data;
+}
+
+// Node Destructor
+template <class data_type>
+Node<data_type>::~Node()
+{
+	previous = NULL;
+	next = NULL;
+	// data.~data_type();
+	// This is the deletion method that was learnt in the lecture, however it causes a core dump?
+}
+
+// Setters
+template <class data_type>
+void Node<data_type>::set_data(const data_type& new_data)
+{
+	data = new_data;
+}
+
+template <class data_type>
+void Node<data_type>::set_next(Node<data_type>* new_next)
+{
+	next = new_next;
+}
+
+template <class data_type>
+void Node<data_type>::set_previous(Node<data_type>* new_previous)
+{
+	previous = new_previous;
+}
+
+// Getters
+template <class data_type>
+data_type Node<data_type>::get_data() const
+{
+	return data;
+}
+
+template <class data_type>
+Node<data_type>* Node<data_type>::get_next() const
+{
+	return next;
+}
+
+template <class data_type>
+Node<data_type>* Node<data_type>::get_previous() const
+{
+	return previous;
+}

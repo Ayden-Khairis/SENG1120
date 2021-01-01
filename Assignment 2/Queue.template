@@ -1,0 +1,151 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+
+#include "LinkedList.h"
+#include "Queue.h"
+
+// Queue 
+template <class value_type>
+Queue<value_type>::Queue()
+{
+	data = new LinkedList<value_type>();
+	length = 0;
+}
+
+// Queue Destructor
+template <class value_type>
+Queue<value_type>::~Queue()
+{
+	delete data;
+	length = 0;
+}
+
+// Method of Enqueue
+template <class value_type>
+void Queue<value_type>::enqueue(const value_type& entry)
+{
+	data->addToTail(entry);		// Adds data to tail
+	length++;					// Inceases length
+}
+
+// Method of Dequeue
+template <class value_type>
+void Queue<value_type>::dequeue() 
+{
+	--length;					// Decreases length
+	data->removeFromHead();		// Removes head data
+}
+
+// Method to Get Head Data
+template <class value_type>
+value_type Queue<value_type>::front()
+{
+	return data->get_head_data();
+}
+
+// Method to find minimum value
+template <class value_type>
+const value_type Queue<value_type>::minimum()
+{
+	Queue<value_type> min;					// Create temp queue
+	int qLength = length;					// Create queue length
+	int minimum = this->front();			// Sets the minimum as the first value
+	
+	for (int i = 0; i < qLength; i++)		
+	{
+		min.enqueue(this->front());			// Starts enqueue for first value
+		this->dequeue();					// Dequeues as it searches through enqueue
+	}
+
+	for (int i = 0; i < qLength; i++)
+	{
+		if (minimum > min.front())			
+		{
+			minimum = min.front();			// Runs through the queue and compares values
+		}
+		this->enqueue(min.front());
+		min.dequeue();
+	}
+	return minimum;							// Returns the lowest value
+}
+
+// Method to find maximum value
+template <class value_type>
+const value_type Queue<value_type>::maximum()  // Same as above except it finds the highest value
+{
+	Queue<value_type> max;
+	int maximum = this->front();
+	int qLength = length;
+
+	for (int i = 0; i < qLength; i++)
+	{
+		max.enqueue(this->front());
+		this->dequeue();
+	}
+
+	for (int i = 0; i < qLength; i++)
+	{
+		if (maximum < max.front())
+		{
+			maximum = max.front();
+		}
+		this->enqueue(max.front());
+		max.dequeue();
+	}
+	return maximum;								// Returns maximum
+}
+
+// Method to find Average
+template <class value_type>
+const double Queue<value_type>::average()		// Same as minimum and maximum except it calculates an average at the end
+{
+	Queue<value_type> avg;
+	double average = 0;
+	int qLength = length;
+	
+	for (int i = 0; i < qLength; i++)
+	{
+		avg.enqueue(this->front());
+		this->dequeue();
+	}
+
+	for (int i = 0; i < qLength; i++)
+	{
+		average += avg.front();
+		this->enqueue(avg.front());
+		avg.dequeue();
+	}
+	average = average / qLength;				// Average calculation
+	return average;								// Returns average
+}
+
+// Method to find Standard Deviation
+template <class value_type>
+const double Queue<value_type>::stdeviation()	// Same as average except uses average to find standard deviation
+{
+	Queue<value_type> std;
+	double average = this->average();
+	double stdev = 0;
+	int sum = 0;
+	double qLength = length;
+	
+	for (int i = 0; i < qLength; i++)
+	{
+		std.enqueue(this->front());
+		this->dequeue();
+	}
+
+	for (int i = 0; i < qLength; i++)
+	{
+		sum = std.front();
+		stdev += pow(sum - average,2);
+		this->enqueue(std.front());
+		std.dequeue();
+	}
+	
+	stdev = sqrt( stdev/qLength );				// Standard deviation calculation
+	return stdev;								// Returns standard deviation
+}

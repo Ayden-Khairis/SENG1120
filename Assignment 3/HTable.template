@@ -1,0 +1,80 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+
+#include "HTable.h"
+
+// Hasfun function
+template <typename data_type>
+int HTable<data_type>::hashfun(int value)
+{
+	return value%150;					// Modulo 150
+} 
+
+// Add function
+template <typename data_type>
+void HTable<data_type>::add(data_type newData)
+{
+	data[hashfun(newData)] = newData;	// Initialising new data
+	position[hashfun(newData)] = 1;		// Initialising position
+}
+
+// Remove function
+template <typename data_type>
+void HTable<data_type>::remove(data_type newData)
+{
+	data[hashfun(newData)] = NULL;		// Making data equal NULL
+	position[hashfun(newData)] = 0;		// Making position equal NULL
+}
+
+// Hashtable function
+template <typename data_type>
+HTable<data_type>::HTable()
+{
+	for(int i=0; i<150; i++)			// For loop to run through the positions
+	{
+		position[i] = 0;				// Position equalling 0
+	}
+}
+
+// Hashtable destructor
+template <typename data_type>
+HTable<data_type>::~HTable()
+{
+	for(int i=0; i<150; i++)
+	{
+		data[i] = NULL;					// Data equalling NULL
+		position[i] = 0;				// Position equalling 0
+	}	
+}
+
+// Get data function
+template <typename data_type>
+data_type HTable<data_type>::getData(int pos)
+{
+	if(position[pos] != NULL)			// Gets the data based off position
+	{
+		return data[pos];				// Return data position
+	}
+
+	else
+		return NULL;					// Return NULL
+}
+
+// Overloading operators += and <<
+template <typename data_type>
+ostream& operator<<(ostream& os, HTable<data_type>& temp)
+{
+	for(int i=0; i<150; i++)
+	{
+		data_type output = temp.getData(i);
+		if(output != NULL)
+		{
+			os << output << " ";
+		}
+	}
+
+    return os;  
+}

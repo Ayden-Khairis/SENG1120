@@ -1,0 +1,152 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+
+#include "BTNode.h"
+
+// Constructor
+template <class data_type>
+BTNode<data_type>::BTNode(const data_type new_data)
+{
+	data = new_data;		// New data
+	right = NULL;			// Right equal NULL
+	left = NULL;			// Left equal NULL
+	parent = NULL;			// Parent equal NULL
+}
+
+template <class data_type>
+BTNode<data_type>::~BTNode()
+{
+	data = NULL;			// New data
+	right = NULL;			// Right equal NULL
+	left = NULL;			// Left equal NULL
+	parent = NULL;			// Parent equal NULL
+}
+
+// Setters
+template <class data_type>
+void BTNode<data_type>::set_data(const data_type& new_data)
+{
+	data = new_data;
+}
+
+template <class data_type>
+void BTNode<data_type>::set_right(BTNode<data_type>* new_right)
+{
+	right = new_right;
+}
+
+template <class data_type>
+void BTNode<data_type>::set_left(BTNode<data_type>* new_left)
+{
+	left = new_left;
+}
+
+template <class data_type>
+void BTNode<data_type>::set_parent(BTNode<data_type>* new_parent)
+{
+	parent = new_parent;
+} 
+
+// Getters
+template <class data_type>
+data_type BTNode<data_type>::get_data() const
+{
+	return data;
+}
+
+template <class data_type>
+BTNode<data_type>* BTNode<data_type>::get_right() const
+{
+	return right;
+}
+
+template <class data_type>
+BTNode<data_type>* BTNode<data_type>::get_left() const
+{
+	return left;
+}
+
+template <class data_type>
+BTNode<data_type>* BTNode<data_type>::get_parent() const
+{
+	return parent;
+}
+
+template <typename data_type>
+BTNode<data_type>* BTNode<data_type>::remove_node(data_type data, BTNode<data_type> *parent) 
+{
+    // Check left side
+    if (data < this->data) 
+    {                                              
+        if (left != NULL)	// If left doesn't equal NULL
+        { 
+        	return left->remove_node(data, this); 
+        }            
+        else
+    	{ 
+    		return NULL; // Return NULL
+    	}      
+    } 
+    // Check right side
+    else if (data > this->data)
+    {                                          
+    	if (right != NULL)	// If right doesn't equal NULL
+		{ 
+			return right->remove_node(data, this); 
+		}          
+        else
+    	{ 
+    		return NULL;  // Return NULL
+    	}                  
+    } 
+	else 
+	{
+        // If a node has 2 children
+        if (left != NULL && right != NULL) // If left and right don't equal NULL
+        {                            
+            this->data = right->minimum_value();                           
+            return right->remove_node(this->data, this);          
+        } 
+        // If a node has one child
+        else if (parent->left == this) 
+        {                            
+            if(left != NULL) { parent->left = left;}                  
+            else { parent->left = right; }
+
+            return this;
+        } 
+        // Parent node
+        else if (parent->right == this)
+        {                            
+            if(left != NULL) // If left doesn't equal NULL
+            { 
+            	parent->right = left;
+            } 
+            else 
+        	{ 
+        		parent->right = right; 
+        	}
+
+            return this;
+        }
+    }
+
+    return this;                                                          
+}
+
+template <typename data_type>
+data_type BTNode<data_type>::minimum_value() 
+{
+    if (left == NULL)	// If left equals NULL
+	{ 
+		return data; 	// Return data
+	}     
+    else
+    { 
+    	return left->minimum_value(); // Return left
+    }    
+
+}

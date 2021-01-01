@@ -1,0 +1,167 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+
+#include <cstdlib>
+#include <string>
+#include "Node.h"
+#include "LinkedList.h"
+using namespace std;
+
+    // Initializations of LinkedList
+    template <class data_type>
+    LinkedList<data_type>::LinkedList()
+    {
+        head = NULL;    // Initialize head node
+        tail = NULL;    // Initialize tail node
+        current = NULL; // Initialize current
+        length = 0;     // Set length to 0
+    }
+    
+    template <class data_type>
+    LinkedList<data_type>::LinkedList(data_type& data)
+    {
+        head = new Node<data_type>(data);  // Create new head node
+        tail = head;            // Makes tail node equal head node
+        current = tail;         // Move current to tail
+        length = 1;             // Set length to 1
+    }
+    
+    // Destructor
+    template <class data_type>
+    LinkedList<data_type>::~LinkedList()
+    {
+       while(head != NULL)
+       {
+            Node<data_type>* temp;              // Temp node
+            temp = head;                        // Temp equals head node
+            head = head->get_next();            // Head equals next head node
+                    
+            if (head != NULL) 
+            {
+                head->set_previous(NULL);       // If head exists, set previous head node
+            }
+                     
+            else 
+            {
+                tail = NULL;                    // Otherwise tail equals NULL
+            }
+              
+            delete temp;                        // Delete temp node
+            length--;                           // Decrease length by 1
+            current = head;                     // Current equals head node
+        }
+    }
+
+    // Method to add to head
+    template <class data_type>
+    void LinkedList<data_type>::addToHead(const data_type& data)
+    {
+        // Add head Node to empty list
+        if (length == 0)
+        {
+            tail = new Node<data_type>(data);   // Create a new node and sets it to tail                          
+            head = tail;                        // Makes head node = tail
+            current = head;                     // Let current become head
+            length = 1;                         // Set the length of the linked list to 1                             
+        }
+        else
+        {
+            Node<data_type>* newHead = new Node<data_type>(data);   // Inserts a new node at the head of linked list
+            newHead -> set_previous (NULL);                         // Sets new head to previous
+            newHead -> set_next(head);                              // Sets new head to next head
+            head = newHead;                                         // Head equals the new head that was inserted
+            length++;                                               // Increases the length of the linked list
+            newHead = NULL;                                         // Sets new head to NULL
+        }
+  
+    }
+
+    // Method to add to tail
+    template <class data_type>
+    void LinkedList<data_type>::addToTail(const data_type& data)
+    {
+        // Add tail Node for empty list
+        if (length == 0)
+        {
+            tail = new Node<data_type>(data);   // Create a new node and sets it to tail
+            head = tail;                        // Makes head node = tail
+            current = head;                     // Let current become head 
+            length = 1;                         // Set the length of linked list to 1
+        }
+        
+        else
+        {
+            Node<data_type>* tailInsert = new Node<data_type>(data);    // Inserts a new node at the tail of linked list
+            tail -> set_next(tailInsert);                               // Sets tail to the new tail
+            tailInsert -> set_previous(tail);                           // Sets the previous tail node
+            tail = tailInsert;                                          // Tail equals the new tail that was inserted
+            length++;                                                   // Increases the length of the linked list
+            tailInsert = NULL;                                          // Sets tail insert to NULL
+        }
+    }  
+
+    // Method to access current node
+    template <class data_type>
+    Node<data_type>* LinkedList<data_type>::get_current()
+    {
+        return current;
+    }
+       
+    // Method to access head node
+    template <class data_type>
+    Node<data_type>* LinkedList<data_type>::get_head()
+    {
+        return head;
+    }
+
+    template <class data_type>
+    data_type LinkedList<data_type>::get_head_data()
+    {
+        return head->get_data(); 
+    }
+
+    // Method to remove head node from LinkedList
+ 	template <class data_type>
+    void LinkedList<data_type>::removeFromHead()
+    {
+        Node<data_type>* temp;              // Temp node
+        temp = head;                        // Temp node equals head node
+        head = head->get_next();            // Head node equals next head node
+                
+        if (head != NULL) 
+        {
+            head->set_previous(NULL);       // If head has a node, head is set to previous head
+        }
+                        
+        else 
+        {
+            tail = NULL;                    // Otherwise tail = NULL
+        }
+                
+        delete temp;                        // Delete temp node
+        length--;                           // Decrease length by 1
+        current = head;                     // Current equals head
+    }
+            
+    // Method to set current 
+    template <class data_type>
+    void LinkedList<data_type>::set_current(Node<data_type>* temp)
+    {
+        current = temp;
+    }
+        
+    // Overloading operators += and <<
+    template <class data_type>
+    ostream& operator<<(ostream& os, LinkedList<data_type>& temp)  
+    {
+        temp.set_current(temp.get_head());
+        do{
+            os << temp.get_current()->get_data(); 
+            temp.set_current(temp.get_current()->get_next());
+        }while(temp.get_current() != NULL);
+   
+        return os;  
+    }

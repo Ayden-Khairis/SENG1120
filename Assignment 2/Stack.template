@@ -1,0 +1,77 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+
+#include "LinkedList.h"
+#include "Stack.h"
+
+// Stack
+template <class value_type>
+Stack<value_type>::Stack()
+{
+	data = new LinkedList<value_type>();
+	used = 0;
+}
+
+// Stack Destructor
+template <class value_type>	
+Stack<value_type>::~Stack()
+{
+	delete data;
+	used = 0;
+}
+	
+// Method of Push
+template <class value_type>
+void Stack<value_type>::push(const value_type& obj)
+{
+	data->addToHead(obj);		// Adds data to head
+	used++;						// Inceases used
+}
+
+template <class value_type>
+void Stack<value_type>::pop()
+{
+	data->removeFromHead();		// Removes data from head
+	used--;						// Decreases used
+}
+
+// Method to Access Top
+template <class value_type>
+const value_type Stack<value_type>::top()
+{
+	return data->get_head_data();
+}
+
+// Method to Access Size
+template <class value_type>
+const int Stack<value_type>::size()
+{
+	return used;
+}
+
+// Overloading Operators
+template <class value_type>
+ostream& operator<<(ostream& os, Stack<value_type>& input)
+{          
+    Stack<value_type> sTemp;
+	int sLength = input.size();
+	
+	os << "( ";
+	for (int i = 0; i < sLength; i++)
+	{
+		os << input.top() << " ";
+		sTemp.push(input.top());
+		input.pop();
+	}
+
+	os << ")";
+	for (int i = 0; i < sLength; i++)
+	{ 
+		input.push(sTemp.top());
+		sTemp.pop();
+	}
+    return os;
+}

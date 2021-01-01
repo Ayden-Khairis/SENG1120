@@ -1,0 +1,211 @@
+/*
+Author: Ayden Khairis
+Student Number: C3282229
+Course: SENG1120
+*/
+
+#include "BTNode.h"
+#include "BSTree.h"
+#include <string>
+
+// Constructor
+template <typename data_type>
+BSTree<data_type>::BSTree()
+{
+	root = NULL;
+}
+
+// Root_node 
+template <typename data_type>
+BSTree<data_type>::BSTree(BSTree<data_type>* root_node)
+{
+	root = root_node;
+}
+
+// Destructor
+template <typename data_type>
+BSTree<data_type>::~BSTree()
+{
+    removeBTNodes(root);         // Calls the RemoveBTNodes function on the root node to delete all the node
+}
+
+// Destructor
+template <typename data_type>
+void BSTree<data_type>::removeBTNodes(BTNode<data_type>* node)
+{
+    if(size < 1)		// Checks if tree has nodes
+    { 
+        return;
+    }   
+    else if(size > 1)	// If tree has nodes
+    {                                                	
+        if(node->get_left() != NULL)	// Test left node
+        {                                  	
+            removeBTNodes(node->get_left());                // Calls removebtnodes on left node
+            remove(node->get_left()->get_data());    		// Calls remove for the data in the left node
+        }
+        else if(node->get_right() != NULL)
+        {                             
+            removeBTNodes(node->get_right());				// Calls removeBTNodes on right side
+            remove(node->get_right()->get_data());			// Calls remove for the data in the right node
+        }
+    }
+    delete root;		// Detele root node
+    root = NULL;		// Root equals NULL
+    size--;				// Descrease size by 1
+    return;
+}
+
+// Remove function
+template <typename data_type>
+bool BSTree<data_type>::remove(data_type data)
+{
+  	if (root == NULL)	// Root node equals NULL
+  	{ 
+  		return false; 	// Return false
+  	}                                          
+  	else 
+  	{
+	    if (data == root->get_data())			// Getting root data
+	    {                                        
+		    BTNode<data_type> rootTemp(NULL);   // Temporary root node                             
+		    rootTemp.set_left(root);            // Set temp root to left          
+		      
+		    BTNode<data_type>* current_node = root->remove_node(data, &rootTemp);      // Remove node   
+		    root = rootTemp.get_left();      	// Get temp root to left                                   
+
+		    if (current_node != NULL) 	// If NULL
+		    {
+		        delete current_node;     // Delete current_node                             
+		        return true;            // Return true                     
+		    }
+		    else
+		    { 
+		    	return false; 			// Return false
+		    }                                                         
+	    }
+	    else 
+	    {                                                                      
+	        BTNode<data_type>* current_node = root->remove_node(data, NULL);		// Removes right side node        
+	                                                                                
+	        if (current_node != NULL) 
+	        {                                                
+	            delete current_node;	// Delete current_node
+	            return true;        	// Return true                                        
+	        } 
+	        else
+	        { 
+	        	return false; 			// Return false
+	        }       
+    	}
+  	}
+}
+
+// Add function
+template <typename data_type>
+void BSTree<data_type>::add(data_type it)
+{
+	// Adds new BTNode if root is NULL
+	if(root == NULL)
+	{
+		root = new BTNode<data_type>(it);
+	}
+	// Otherwise it is inserted 
+	else
+	{
+		insert(it, root);
+	}
+
+	size++;		// Increase size of BSTree
+}
+
+// Insert function
+template <typename data_type>
+void BSTree<data_type>::insert(data_type it, BTNode<data_type>* node)
+{
+	BTNode<data_type>* temp;	// Create temp node
+
+	// If it equals node, then the if statement is satisfied
+	if(it == node->get_data())
+	{
+		return;
+	}
+	// If it is greater than the node, it is set the right
+	else if(it > node->get_data())
+	{
+		if(node->get_right() == NULL)
+		{
+			temp = new BTNode<data_type>(it);
+			node->set_right(temp);
+		}
+		else
+		{
+			insert(it, node->get_right());
+		}
+	}
+	// If it is less than the node, it is set the left
+	else
+	{ 
+		if (node->get_left() == NULL)
+		{
+			temp = new BTNode<data_type>(it);	
+			node->set_left(temp);
+		}
+		else
+		{
+			insert(it, node->get_left());
+		}
+	}
+}
+
+
+
+// Find function
+template <typename data_type>
+bool BSTree<data_type>::find(BTNode<data_type>* node, data_type target)
+{
+	if (node == NULL)
+	{
+		return false;
+	}
+	else if (target == node->get_data())
+	{
+		return true;
+	}
+	else if (target < node->get_data())
+	{
+		return find(node->get_left(), target);
+	}
+	else
+	{
+		return find(node->get_right(), target);
+	}
+}
+
+// Print for infix
+template <typename data_type>
+void BSTree<data_type>::print()
+{
+	infix(root);
+}
+
+// Infix function
+template <typename data_type>
+void BSTree<data_type>::infix(BTNode<data_type>* node)
+{
+	if(node != NULL)						// Testing if node doesn't equal NULL
+	{
+		infix(node->get_left());			// Get left node
+		cout << node->get_data() << " ";	// Print current node
+		infix(node->get_right());			// Get right node
+	}
+	return;
+}
+
+// Operator overload
+template <typename data_type>
+ostream& operator<<(ostream& os, BSTree<data_type>& list)
+{
+	list.print();
+    return os;
+}
